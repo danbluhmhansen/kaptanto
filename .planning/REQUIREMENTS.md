@@ -30,7 +30,7 @@ Requirements for v2.0 Distributed Architecture milestone. Each maps to roadmap p
 
 - [x] **SRCC-01**: Epoch fencing tokens prevent a zombie WAL leader from advancing the Postgres replication slot LSN — a node that was partitioned and reconnects after a new leader was elected cannot write events or advance the confirmed_flush_lsn
 - [x] **SRCC-02**: Kaptanto cluster leader election is backed by etcd consensus (embedded peer in each binary) — leader election does not require a separate coordination service and survives any single node failure
-- [ ] **SRCC-03**: MongoDB Change Stream resume tokens are written synchronously to the shared store before any event at that position is acknowledged — a node crash does not lose resume token progress, and the replacement node resumes from the correct shared-store position without re-processing already-logged events
+- [x] **SRCC-03**: MongoDB Change Stream resume tokens are written synchronously to the shared store before any event at that position is acknowledged — a node crash does not lose resume token progress, and the replacement node resumes from the correct shared-store position without re-processing already-logged events
 
 ## v2.x Requirements
 
@@ -85,7 +85,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DLVR-04 | Phase 16 | Complete |
 | SRCC-01 | Phase 17 | Complete |
 | SRCC-02 | Phase 17 | Complete |
-| SRCC-03 | Phase 17 | Pending |
+| SRCC-03 | Phase 17 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 13 total

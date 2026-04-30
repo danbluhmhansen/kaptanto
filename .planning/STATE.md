@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Distributed Architecture
 status: unknown
-last_updated: "2026-04-30T00:35:06.406Z"
+last_updated: "2026-04-30T17:04:04.994Z"
 progress:
-  total_phases: 24
-  completed_phases: 24
-  total_plans: 58
-  completed_plans: 58
+  total_phases: 25
+  completed_phases: 25
+  total_plans: 61
+  completed_plans: 61
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 ## Current Position
 
 Phase: 17 of 17 (Distributed Source Coordination)
-Plan: 02 complete — Phase 17 in progress (2/3 plans done)
-Status: Phase 17 In Progress
-Last activity: 2026-04-30 — Completed 17-02 (epoch-fenced sendStandbyStatus: epochGetter field + SetEpochGetter + ShouldSendStandby guard, SRCC-01)
+Plan: 03 complete — Phase 17 COMPLETE (3/3 plans done)
+Status: Phase 17 Complete — v2.0 Distributed Architecture milestone complete
+Last activity: 2026-04-30 — Completed 17-03 (root.go cluster wiring: WalLeaderElector + MongoDB PostgresStore, SRCC-01/02/03)
 
-Progress: [███████░░░] 67% (2/3 plans complete in Phase 17)
+Progress: [██████████] 100% (3/3 plans complete in Phase 17)
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [███████░░░] 67% (2/3 plans complete in Phase 17)
 | Phase 16 P03 | 4 | 2 tasks | 2 files |
 | Phase 17 P01 | 18 | 2 tasks (TDD) | 3 files |
 | Phase 17 P02 | 4 | 1 task (TDD) | 2 files |
+| Phase 17 P03 | 3 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,9 @@ Recent decisions affecting current work:
 - [Phase 17-02]: epochGetter func pointer set once before Run starts, never mutated during Run — no mutex needed in connector (WalLeaderElector reads its own atomic.Bool internally)
 - [Phase 17-02]: Zombie node drops standby update (returns nil) rather than cancelling ctx — ctx cancellation closes replication slot which can corrupt in-flight events; wal_receiver_timeout is the correct fence
 - [Phase 17-02]: nil epochGetter path is byte-for-byte identical to pre-Phase-17 — ShouldSendStandby(nil) returns true unconditionally
+- [Phase 17]: walElector declared before event log block so it is in scope for SetEpochGetter and errgroup.Go without type assertions
+- [Phase 17]: walElector nil for MongoDB source path: MongoDB dispatched before connector block, so EpochGetter never injected into MongoDB pipeline
+- [Phase 17]: runMongoPipeline uses cfg.ClusterDSN not cfg.Source for PostgresStore DSN — cfg.Source is MongoDB URI
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30T16:58:33Z
-Stopped at: Completed 17-01-PLAN.md (WalLeaderElector with NATS JetStream KV TTL lease and NatsEventLog.Conn() accessor, SRCC-02)
+Last session: 2026-04-30T17:03:00Z
+Stopped at: Completed 17-03-PLAN.md (final Phase 17 wiring: WalLeaderElector + MongoDB PostgresStore, SRCC-01/02/03 complete — v2.0 milestone done)
 Resume file: None
