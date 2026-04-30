@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 ## Current Position
 
 Phase: 16 of 17 (Partition Ownership and Active-Active Delivery)
-Plan: 01 complete — 2/3 plans remaining
+Plan: 02 complete — 1/3 plans remaining
 Status: In Progress
-Last activity: 2026-04-30 — Completed 16-01 (PartitionStore atomic claim/steal/release)
+Last activity: 2026-04-30 — Completed 16-02 (PartitionManager, epochCursorStore, Router partition subset)
 
-Progress: [████████░░] 82% (1/3 plans complete in Phase 16)
+Progress: [█████████░] 91% (2/3 plans complete in Phase 16)
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Progress: [████████░░] 82% (1/3 plans complete in Phase 16)
 | Phase 15 P01 | 8 | 2 tasks | 5 files |
 | Phase 15 P02 | 3 | 2 tasks | 2 files |
 | Phase 16 P01 | 3 | 2 tasks | 2 files |
+| Phase 16 P02 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,11 @@ Recent decisions affecting current work:
 - [Phase 16-01]: Non-nil empty slice invariant applied to ClaimUnclaimed, StealStalePartitions, and ListOwned — matches StaleNodes contract
 - [Phase 16-01]: EpochFor reads in-memory epochs map under RLock — avoids DB round-trip for hot-path partition validation in Plan 03
 - [Phase 16-01]: OpenPartitionStore seeds 64 rows via INSERT ON CONFLICT DO NOTHING — idempotent across concurrent multi-node starts
+- [Phase 16-02]: PartitionManager constructed before Router (nil rtr) — circular dep broken by SetRouter injection after NewRouter
+- [Phase 16-02]: epochCursorStore.SaveCursor drops unowned partitions silently (nil error) — zombie nodes cannot advance cursors (DLVR-02)
+- [Phase 16-02]: Router.Run reads ownedPartitions under RLock snapshot at entry — avoids locking inside goroutine launch loop
+- [Phase 16-02]: allPartitions(n) helper produces [0..n-1] slice so nil ownedPartitions is byte-for-byte identical to pre-Phase-16 behavior
+- [Phase 16-02]: PartitionManager.ReleaseAll NOT called inside Run — root.go calls it after g.Wait() so cursor flush completes first
 
 ### Pending Todos
 
@@ -92,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30T00:17:30Z
-Stopped at: Completed 16-01-PLAN.md (PartitionStore atomic claim/steal/release)
+Last session: 2026-04-30T00:23:57Z
+Stopped at: Completed 16-02-PLAN.md (PartitionManager, epochCursorStore, Router partition subset)
 Resume file: None

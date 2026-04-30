@@ -23,8 +23,8 @@ Requirements for v2.0 Distributed Architecture milestone. Each maps to roadmap p
 
 - [x] **DLVR-01**: A node joining a running cluster automatically claims unclaimed partitions from the coordinator and begins serving SSE and gRPC consumers for those partitions without operator intervention
 - [x] **DLVR-02**: When a node leaves (gracefully or via crash), its partitions are reassigned to surviving nodes using a two-phase handoff — the old node drains all in-flight events before the new node begins consuming, and epoch fencing tokens prevent any zombie write from a partitioned-then-reconnected node
-- [ ] **DLVR-03**: Multiple Kaptanto nodes can simultaneously serve SSE and gRPC consumers, each node serving only its owned partitions — consumers can connect to any node and receive events for that node's partitions
-- [ ] **DLVR-04**: Per-key ordering (RTR-04) is preserved across partition reassignments — events for any given primary key always arrive at downstream consumers in LSN order, including during node join and leave events
+- [x] **DLVR-03**: Multiple Kaptanto nodes can simultaneously serve SSE and gRPC consumers, each node serving only its owned partitions — consumers can connect to any node and receive events for that node's partitions
+- [x] **DLVR-04**: Per-key ordering (RTR-04) is preserved across partition reassignments — events for any given primary key always arrive at downstream consumers in LSN order, including during node join and leave events
 
 ### Source Coordination (SRCC)
 
@@ -81,8 +81,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVLOG-03 | Phase 15 | Complete |
 | DLVR-01 | Phase 16 | Complete |
 | DLVR-02 | Phase 16 | Complete |
-| DLVR-03 | Phase 16 | Pending |
-| DLVR-04 | Phase 16 | Pending |
+| DLVR-03 | Phase 16 | Complete |
+| DLVR-04 | Phase 16 | Complete |
 | SRCC-01 | Phase 17 | Pending |
 | SRCC-02 | Phase 17 | Pending |
 | SRCC-03 | Phase 17 | Pending |
