@@ -61,7 +61,7 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 14: Shared State Foundation** — Migrate consumer cursors and backfill progress to shared Postgres store; establish cluster membership table with heartbeat-based node liveness (completed 2026-04-27)
 - [x] **Phase 15: Distributed Event Log** — Replace node-local Badger with Raft-replicated event log (NATS JetStream sidecar); preserve CHK-01 cluster-wide; preserve pure Go default binary (completed 2026-04-28)
 - [x] **Phase 16: Partition Ownership and Active/Active Delivery** — Partition-to-node assignment layer above Router; two-phase handoff with epoch fencing; N-node active consumer delivery via SSE and gRPC (completed 2026-04-30)
-- [ ] **Phase 17: Distributed Source Coordination** — etcd-backed leader election; epoch fencing on WAL slot access; MongoDB resume tokens written to shared store before acknowledgment
+- [ ] **Phase 17: Distributed Source Coordination** — NATS KV-backed WAL leader election with epoch fencing; MongoDB resume tokens written to shared store before acknowledgment
 
 ## Phase Details
 
@@ -162,14 +162,19 @@ Plans:
 - [ ] 16-03-PLAN.md — root.go wiring: PartitionManager + epochCursorStore behind --cluster, correct shutdown ordering (DLVR-01, DLVR-02, DLVR-03, DLVR-04)
 
 ### Phase 17: Distributed Source Coordination
-**Goal**: The WAL leader is protected by etcd-backed election with epoch fencing so no zombie node can corrupt the replication slot, and MongoDB resume token progress survives node loss
+**Goal**: The WAL leader is protected by NATS JetStream KV-backed election with epoch fencing so no zombie node can corrupt the replication slot, and MongoDB resume token progress survives node loss
 **Depends on**: Phase 16
 **Requirements**: SRCC-01, SRCC-02, SRCC-03
 **Success Criteria** (what must be TRUE):
   1. A node that was network-partitioned and then reconnects after a new WAL leader was elected cannot advance the Postgres replication slot LSN or write events — epoch fencing tokens reject its operations
-  2. Leader election does not require a separate coordination service — etcd runs as an embedded peer inside each Kaptanto binary; any single node failure does not prevent a new leader from being elected
+  2. Leader election does not require a separate coordination service — NATS JetStream KV (already embedded from Phase 15) provides atomic kv.Create consensus; any single node failure does not prevent a new leader from being elected
   3. When a MongoDB-sourced node crashes, the replacement node resumes the Change Stream from the correct position recorded in the shared store — no events already logged are re-processed, and no events between the last token and the crash are lost
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 17-01-PLAN.md — NatsEventLog.Conn() accessor + WalLeaderElector (NATS KV TTL lease) with tests (SRCC-02)
+- [ ] 17-02-PLAN.md — PostgresConnector epoch fencing: epochGetter field + SetEpochGetter + fenced sendStandbyStatus (SRCC-01)
+- [ ] 17-03-PLAN.md — root.go wiring: WalLeaderElector into Postgres pipeline + PostgresStore ckStore for MongoDB cluster mode (SRCC-01, SRCC-02, SRCC-03)
 
 ## Progress
 
@@ -192,5 +197,5 @@ Plans:
 | 13. Report Generator | v1.2 | 2/2 | ✓ Complete | 2026-03-21 |
 | 14. Shared State Foundation | v2.0 | 3/3 | ✓ Complete | 2026-04-28 |
 | 15. Distributed Event Log | v2.0 | 2/2 | ✓ Complete | 2026-04-28 |
-| 16. Partition Ownership and Active/Active Delivery | 3/3 | Complete   | 2026-04-30 | - |
-| 17. Distributed Source Coordination | v2.0 | 0/TBD | Not started | - |
+| 16. Partition Ownership and Active/Active Delivery | v2.0 | 3/3 | ✓ Complete | 2026-04-30 |
+| 17. Distributed Source Coordination | v2.0 | 0/3 | Not started | - |
