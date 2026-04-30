@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Distributed Architecture
 status: unknown
-last_updated: "2026-04-28T18:21:52.209Z"
+last_updated: "2026-04-30T00:30:59.519Z"
 progress:
-  total_phases: 23
-  completed_phases: 23
-  total_plans: 55
-  completed_plans: 55
+  total_phases: 24
+  completed_phases: 24
+  total_plans: 58
+  completed_plans: 58
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 ## Current Position
 
 Phase: 16 of 17 (Partition Ownership and Active-Active Delivery)
-Plan: 02 complete — 1/3 plans remaining
-Status: In Progress
-Last activity: 2026-04-30 — Completed 16-02 (PartitionManager, epochCursorStore, Router partition subset)
+Plan: 03 complete — Phase 16 COMPLETE (3/3 plans done)
+Status: Phase 16 Complete
+Last activity: 2026-04-30 — Completed 16-03 (root.go cluster wiring: PartitionManager + epochCursorStore + graceful shutdown)
 
-Progress: [█████████░] 91% (2/3 plans complete in Phase 16)
+Progress: [██████████] 100% (3/3 plans complete in Phase 16)
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [█████████░] 91% (2/3 plans complete in Phase 16)
 | Phase 15 P02 | 3 | 2 tasks | 2 files |
 | Phase 16 P01 | 3 | 2 tasks | 2 files |
 | Phase 16 P02 | 4 | 2 tasks | 5 files |
+| Phase 16 P03 | 4 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 16-02]: Router.Run reads ownedPartitions under RLock snapshot at entry — avoids locking inside goroutine launch loop
 - [Phase 16-02]: allPartitions(n) helper produces [0..n-1] slice so nil ownedPartitions is byte-for-byte identical to pre-Phase-16 behavior
 - [Phase 16-02]: PartitionManager.ReleaseAll NOT called inside Run — root.go calls it after g.Wait() so cursor flush completes first
+- [Phase 16]: Cluster setup moved entirely before NewRouter — DLVR-02 requires epochCursorStore to be ready before Router is constructed
+- [Phase 16]: pm.ReleaseAll called in root.go after g.Wait() — canonical shutdown path; pm.Run does NOT call ReleaseAll internally
+- [Phase 16]: fakeEventLogForCmd in cmd_test package satisfies eventlog.EventLog interface for compile-guard test without cross-package test helper imports
 
 ### Pending Todos
 
@@ -98,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30T00:23:57Z
-Stopped at: Completed 16-02-PLAN.md (PartitionManager, epochCursorStore, Router partition subset)
+Last session: 2026-04-30T00:30:05Z
+Stopped at: Completed 16-03-PLAN.md (root.go cluster wiring: PartitionManager + epochCursorStore + graceful shutdown)
 Resume file: None

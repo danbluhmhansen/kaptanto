@@ -60,7 +60,7 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 
 - [x] **Phase 14: Shared State Foundation** — Migrate consumer cursors and backfill progress to shared Postgres store; establish cluster membership table with heartbeat-based node liveness (completed 2026-04-27)
 - [x] **Phase 15: Distributed Event Log** — Replace node-local Badger with Raft-replicated event log (NATS JetStream sidecar); preserve CHK-01 cluster-wide; preserve pure Go default binary (completed 2026-04-28)
-- [ ] **Phase 16: Partition Ownership and Active/Active Delivery** — Partition-to-node assignment layer above Router; two-phase handoff with epoch fencing; N-node active consumer delivery via SSE and gRPC
+- [x] **Phase 16: Partition Ownership and Active/Active Delivery** — Partition-to-node assignment layer above Router; two-phase handoff with epoch fencing; N-node active consumer delivery via SSE and gRPC (completed 2026-04-30)
 - [ ] **Phase 17: Distributed Source Coordination** — etcd-backed leader election; epoch fencing on WAL slot access; MongoDB resume tokens written to shared store before acknowledgment
 
 ## Phase Details
@@ -192,5 +192,5 @@ Plans:
 | 13. Report Generator | v1.2 | 2/2 | ✓ Complete | 2026-03-21 |
 | 14. Shared State Foundation | v2.0 | 3/3 | ✓ Complete | 2026-04-28 |
 | 15. Distributed Event Log | v2.0 | 2/2 | ✓ Complete | 2026-04-28 |
-| 16. Partition Ownership and Active/Active Delivery | 2/3 | In Progress|  | - |
+| 16. Partition Ownership and Active/Active Delivery | 3/3 | Complete   | 2026-04-30 | - |
 | 17. Distributed Source Coordination | v2.0 | 0/TBD | Not started | - |
