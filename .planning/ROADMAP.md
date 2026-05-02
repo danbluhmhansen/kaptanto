@@ -62,7 +62,7 @@ Full archive: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 15: Distributed Event Log** — Replace node-local Badger with Raft-replicated event log (NATS JetStream sidecar); preserve CHK-01 cluster-wide; preserve pure Go default binary (completed 2026-04-28)
 - [x] **Phase 16: Partition Ownership and Active/Active Delivery** — Partition-to-node assignment layer above Router; two-phase handoff with epoch fencing; N-node active consumer delivery via SSE and gRPC (completed 2026-04-30)
 - [x] **Phase 17: Distributed Source Coordination** — NATS KV-backed WAL leader election with epoch fencing; MongoDB resume tokens written to shared store before acknowledgment (completed 2026-04-30)
-- [ ] **Phase 18: MongoDB Cluster Infrastructure Wiring** [GAP-CLOSURE] — Pass heartbeater and pm into runMongoPipeline so MongoDB+cluster deployments start cluster goroutines; fix walElector nil guard and inaccurate comment; remove dead staleThreshold field and partition_assignments column
+- [x] **Phase 18: MongoDB Cluster Infrastructure Wiring** [GAP-CLOSURE] — Pass heartbeater and pm into runMongoPipeline so MongoDB+cluster deployments start cluster goroutines; fix walElector nil guard and inaccurate comment; remove dead staleThreshold field and partition_assignments column (completed 2026-05-02)
 
 ## Phase Details
 
@@ -218,4 +218,4 @@ Plans:
 | 15. Distributed Event Log | v2.0 | 2/2 | ✓ Complete | 2026-04-28 |
 | 16. Partition Ownership and Active/Active Delivery | v2.0 | 3/3 | ✓ Complete | 2026-04-30 |
 | 17. Distributed Source Coordination | v2.0 | 3/3 | ✓ Complete | 2026-05-01 |
-| 18. MongoDB Cluster Infrastructure Wiring [GAP] | 1/2 | In Progress|  | — |
+| 18. MongoDB Cluster Infrastructure Wiring [GAP] | 2/2 | Complete   | 2026-05-02 | — |

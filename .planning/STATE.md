@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Distributed Architecture
 status: unknown
-last_updated: "2026-05-02T13:58:28.499Z"
+last_updated: "2026-05-02T14:02:55.323Z"
 progress:
   total_phases: 26
-  completed_phases: 25
+  completed_phases: 26
   total_plans: 63
-  completed_plans: 62
+  completed_plans: 63
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 ## Current Position
 
 Phase: 18 of 18 (MongoDB Cluster Infrastructure Wiring — gap closure)
-Plan: 02 — Phase 18 in progress (1/2 plans done)
-Status: 18-01 complete — runMongoPipeline wired with cluster goroutines and deferred ReleaseAll
-Last activity: 2026-05-02 — Completed 18-01 (heartbeater.Run + pm.Run + deferred pm.ReleaseAll in MongoDB pipeline)
+Plan: 02 — Phase 18 COMPLETE (2/2 plans done)
+Status: 18-02 complete — dead code removed: staleThreshold, partition_assignments, walElector comment fixed
+Last activity: 2026-05-02 — Completed 18-02 (NodeHeartbeater cleanup, DDL cleanup, walElector comment fix)
 
-Progress: [██████████] 100% (1/2 plans complete in Phase 18)
+Progress: [██████████] 100% (2/2 plans complete in Phase 18 — phase COMPLETE)
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [██████████] 100% (1/2 plans complete in Phase 18)
 | Phase 17 P02 | 4 | 1 task (TDD) | 2 files |
 | Phase 17 P03 | 3 | 2 tasks | 1 files |
 | Phase 18 P01 | 5 | 2 tasks | 1 files |
+| Phase 18 P02 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,9 @@ Recent decisions affecting current work:
 - [Phase 18]: heartbeater and pm passed as explicit nil-able parameters to runMongoPipeline (nil when !cfg.Cluster) — nil guards make non-cluster MongoDB paths identical to pre-Phase-18
 - [Phase 18]: Single deferred pm.ReleaseAll at function entry in runMongoPipeline (not after g.Wait or g2.Wait) — fires on any return path including re-snapshot branch
 - [Phase 18]: walElector NOT passed to runMongoPipeline — MongoDB requires no WAL epoch fencing; nil guard in runPipeline already prevents walElector construction for MongoDB source
+- [Phase 18]: staleThreshold removed from NodeHeartbeater: field was never read; PartitionManager.tick computes its own threshold
+- [Phase 18]: partition_assignments removed from DDL INSERT list only (not ALTER TABLE DROP): backward-compat with existing deployments
+- [Phase 18]: walElector comment corrected in root.go: allocated for MongoDB+cluster but never Run — prior comment falsely implied nil
 
 ### Pending Todos
 
@@ -121,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02T13:57:00Z
-Stopped at: Completed 18-01-PLAN.md (runMongoPipeline cluster goroutine wiring: heartbeater.Run + pm.Run + deferred pm.ReleaseAll)
+Last session: 2026-05-02T14:05:00Z
+Stopped at: Completed 18-02-PLAN.md (dead code removal: staleThreshold field, partition_assignments DDL, walElector comment fix — Phase 18 complete)
 Resume file: None
