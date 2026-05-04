@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 ## Current Position
 
 Phase: 20 — SQS Sink
-Plan: 01 of 03 (complete)
-Status: Plan 01 complete — SQSSinkConfig struct, SQS pointer field on SinksConfig, aws-sdk-go-v2 modules installed
-Last activity: 2026-05-04 — Plan 20-01 complete (SQS config and AWS SDK)
+Plan: 02 of 03 (complete)
+Status: Plan 02 complete — SQSSinkConsumer with FIFO delivery, FNV-1a MessageGroupId, SHA-256 MessageDeduplicationId, 10 unit tests
+Last activity: 2026-05-04 — Plan 20-02 complete (SQSSinkConsumer implementation)
 
-Progress: [██░░░░░░░░] 20% (1/5 phases complete, 1/3 plans complete in Phase 20)
+Progress: [███░░░░░░░] 30% (1/5 phases complete, 2/3 plans complete in Phase 20)
 
 ## Accumulated Context
 
@@ -50,6 +50,9 @@ Recent decisions affecting current work:
 - [Phase 19 Plan 03]: Each queue sink case pattern: nil-check cfg.Sinks.X, construct consumer, SetMetrics, rtr.Register, append HealthProbe, serve /metrics + /healthz
 - [Phase 20 Plan 01]: SQSSinkConfig uses pointer field (*SQSSinkConfig) on SinksConfig — nil when sub-block absent in YAML, consistent with Phase 19 NATS pattern
 - [Phase 20 Plan 01]: aws-sdk-go-v2 chosen (v1 deprecated); credentials module included alongside config+sqs for static credential provider in Plan 02
+- [Phase 20 Plan 02]: sqsAPI interface extracted from *sqs.Client for unit test injection without live AWS endpoint
+- [Phase 20 Plan 02]: newConsumerWithClient internal constructor centralises FIFO validation for both production and test use
+- [Phase 20 Plan 02]: Close is a no-op because SQS is stateless HTTP — AWS SDK manages HTTP connection pooling internally
 
 ### Pending Todos
 
@@ -65,6 +68,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-04
-Stopped at: Completed 20-01-PLAN.md — SQS config and AWS SDK installation
+Stopped at: Completed 20-02-PLAN.md — SQSSinkConsumer implementation
 Resume file: None
-Next action: Execute Phase 20 Plan 02 (SQSSinkConsumer)
+Next action: Execute Phase 20 Plan 03 (SQS CLI wiring in root.go)
