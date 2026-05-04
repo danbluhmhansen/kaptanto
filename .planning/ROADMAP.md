@@ -235,7 +235,12 @@ Plans:
   2. Kaptanto detects at startup if the configured queue is a Standard (non-FIFO) queue and exits with a clear error message — Standard queues are rejected because they cannot preserve per-key ordering
   3. Each published message has `MessageGroupId` set to the event's primary key hash, `MessageDeduplicationId` set to the `IdempotencyKey`, and the raw `IdempotencyKey` value in a message attribute — downstream consumers can deduplicate without parsing the body
   4. `make build CGO_ENABLED=0` succeeds with the SQS sink included — no CGO introduced
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 20-01-PLAN.md — SQSSinkConfig type + aws-sdk-go-v2 module installation
+- [ ] 20-02-PLAN.md — SQSSinkConsumer implementation (Deliver, Ping, FIFO validation, interface injection for tests)
+- [ ] 20-03-PLAN.md — root.go wiring: case "sqs":, health probe, obs HTTP server, cmd tests
 
 ### Phase 21: Kafka Sink
 **Goal**: Users can publish CDC events to a Kafka topic with per-key ordering preserved via record key, using a pure-Go client that satisfies the CGO_ENABLED=0 build constraint
@@ -295,8 +300,8 @@ Plans:
 | 16. Partition Ownership and Active/Active Delivery | v2.0 | 3/3 | ✓ Complete | 2026-04-30 |
 | 17. Distributed Source Coordination | v2.0 | 3/3 | ✓ Complete | 2026-05-01 |
 | 18. MongoDB Cluster Infrastructure Wiring [GAP] | v2.0 | 2/2 | ✓ Complete | 2026-05-02 |
-| 19. Sink Infrastructure and NATS Sink | 3/3 | Complete   | 2026-05-03 | - |
-| 20. SQS Sink | v2.1 | 0/TBD | Not started | - |
+| 19. Sink Infrastructure and NATS Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-04 |
+| 20. SQS Sink | v2.1 | 0/3 | Not started | - |
 | 21. Kafka Sink | v2.1 | 0/TBD | Not started | - |
 | 22. Google Pub/Sub Sink | v2.1 | 0/TBD | Not started | - |
 | 23. RabbitMQ Sink | v2.1 | 0/TBD | Not started | - |
