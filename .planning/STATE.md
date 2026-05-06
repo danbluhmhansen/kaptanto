@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 ## Current Position
 
 Phase: 23 — RabbitMQ Sink
-Plan: 02 of 03 (complete)
-Status: Plan 23-02 complete — RabbitMQSinkConsumer with 64-channel pool, publisher confirms, reconnect loop, 10 unit tests; amqp091-go promoted to direct dependency
-Last activity: 2026-05-07 — Plan 23-02 complete (RabbitMQSinkConsumer implementation)
+Plan: 03 of 03 (complete)
+Status: Plan 23-03 complete — case "rabbitmq": wired into root.go, two cmd tests pass, make test/build/verify-no-cgo all green; Phase 23 complete, SNK-02 satisfied
+Last activity: 2026-05-07 — Plan 23-03 complete (RabbitMQ CLI wiring)
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 2/3 plans complete in Phase 23)
+Progress: [████░░░░░░] 40% (2/5 phases complete, 3/3 plans complete in Phase 23)
 
 ## Accumulated Context
 
@@ -76,6 +76,9 @@ Recent decisions affecting current work:
 - [Phase 23-rabbitmq-sink]: amqp091-go kept as indirect dependency; go mod tidy omitted until Plan 02 imports it — mirrors Phase 21/22 Plan 01 pattern
 - [Phase 23-rabbitmq-sink]: AMQPChannelAPI + DeferredConfirmAPI exported for external test package fakes; keeps interface definition in one place
 - [Phase 23-rabbitmq-sink]: 64-channel pool maps entry.PartitionID % 64 — AMQP channels are not goroutine-safe; one channel per partition is the correct serialization boundary
+- [Phase 23 Plan 03]: rabbitmqsink import alias mirrors natssink/sqssink/kafkasink/pubsubsink convention — consistent naming pattern for all sink packages
+- [Phase 23 Plan 03]: defer rabbitmqSink.Close() required — RabbitMQ maintains persistent TCP connections (AMQP channel pool), unlike stateless HTTP SQS sink
+- [Phase 23 Plan 03]: RabbitMQ obs server uses cfg.Port (not cfg.Port+1) — RabbitMQ publishes to external broker; no TCP server binds cfg.Port in rabbitmq mode
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-07
-Stopped at: Completed 23-02-PLAN.md — RabbitMQSinkConsumer implementation
+Stopped at: Completed 23-03-PLAN.md — Phase 23 complete (RabbitMQ CLI wiring)
 Resume file: None
-Next action: Execute Phase 23 Plan 03 (RabbitMQ sink wiring into root.go + CLI)
+Next action: Phase 23 complete — SNK-02 satisfied; proceed to next phase
