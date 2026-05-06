@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-06T22:49:28.588Z"
+last_updated: "2026-05-06T22:55:49.745Z"
 progress:
   total_phases: 31
   completed_phases: 30
   total_plans: 78
-  completed_plans: 76
+  completed_plans: 78
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 ## Current Position
 
 Phase: 23 — RabbitMQ Sink
-Plan: 01 of 03 (complete)
-Status: Plan 23-01 complete — RabbitMQSinkConfig struct + amqp091-go v1.11.0 + three config round-trip tests; SNK-02 satisfied
-Last activity: 2026-05-07 — Plan 23-01 complete (RabbitMQSinkConfig + amqp091-go install)
+Plan: 02 of 03 (complete)
+Status: Plan 23-02 complete — RabbitMQSinkConsumer with 64-channel pool, publisher confirms, reconnect loop, 10 unit tests; amqp091-go promoted to direct dependency
+Last activity: 2026-05-07 — Plan 23-02 complete (RabbitMQSinkConsumer implementation)
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 1/3 plans complete in Phase 23)
+Progress: [████░░░░░░] 40% (2/5 phases complete, 2/3 plans complete in Phase 23)
 
 ## Accumulated Context
 
@@ -74,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 23 Plan 01]: RabbitMQSinkConfig uses pointer field (*RabbitMQSinkConfig) on SinksConfig — nil when sub-block absent in YAML, consistent with NATS/SQS/Kafka/PubSub pattern
 - [Phase 23 Plan 01]: TLSConfig reused from existing type — no new TLS struct needed for RabbitMQ (same pattern as all prior sinks)
 - [Phase 23-rabbitmq-sink]: amqp091-go kept as indirect dependency; go mod tidy omitted until Plan 02 imports it — mirrors Phase 21/22 Plan 01 pattern
+- [Phase 23-rabbitmq-sink]: AMQPChannelAPI + DeferredConfirmAPI exported for external test package fakes; keeps interface definition in one place
+- [Phase 23-rabbitmq-sink]: 64-channel pool maps entry.PartitionID % 64 — AMQP channels are not goroutine-safe; one channel per partition is the correct serialization boundary
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-07
-Stopped at: Completed 23-01-PLAN.md — RabbitMQSinkConfig + amqp091-go install
+Stopped at: Completed 23-02-PLAN.md — RabbitMQSinkConsumer implementation
 Resume file: None
-Next action: Execute Phase 23 Plan 02 (RabbitMQSinkConsumer implementation)
+Next action: Execute Phase 23 Plan 03 (RabbitMQ sink wiring into root.go + CLI)
