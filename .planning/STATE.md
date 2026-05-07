@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-06T22:55:49.745Z"
+last_updated: "2026-05-07T22:49:14.791Z"
 progress:
-  total_phases: 31
-  completed_phases: 30
-  total_plans: 78
-  completed_plans: 78
+  total_phases: 33
+  completed_phases: 31
+  total_plans: 80
+  completed_plans: 79
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 
 ## Current Position
 
-Phase: 23 — RabbitMQ Sink
-Plan: 03 of 03 (complete)
-Status: Plan 23-03 complete — case "rabbitmq": wired into root.go, two cmd tests pass, make test/build/verify-no-cgo all green; Phase 23 complete, SNK-02 satisfied
-Last activity: 2026-05-07 — Plan 23-03 complete (RabbitMQ CLI wiring)
+Phase: 24 — Sink Config Surface Cleanup
+Plan: 01 of 01 (complete)
+Status: Plan 24-01 complete — --output flag usage string updated to list all 8 modes, TestFlagOutputUsageComplete added, CFG-04 closed
+Last activity: 2026-05-08 — Plan 24-01 complete (--output flag help text fix)
 
 Progress: [████░░░░░░] 40% (2/5 phases complete, 3/3 plans complete in Phase 23)
 
@@ -79,6 +79,7 @@ Recent decisions affecting current work:
 - [Phase 23 Plan 03]: rabbitmqsink import alias mirrors natssink/sqssink/kafkasink/pubsubsink convention — consistent naming pattern for all sink packages
 - [Phase 23 Plan 03]: defer rabbitmqSink.Close() required — RabbitMQ maintains persistent TCP connections (AMQP channel pool), unlike stateless HTTP SQS sink
 - [Phase 23 Plan 03]: RabbitMQ obs server uses cfg.Port (not cfg.Port+1) — RabbitMQ publishes to external broker; no TCP server binds cfg.Port in rabbitmq mode
+- [Phase 24-sink-config-surface-cleanup]: Updated --output flag Usage string (line 113) to list all 8 modes; runtime error at line 725 was already correct
 
 ### Pending Todos
 
@@ -93,7 +94,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-07
-Stopped at: Completed 23-03-PLAN.md — Phase 23 complete (RabbitMQ CLI wiring)
+Last session: 2026-05-08
+Stopped at: Completed 24-01-PLAN.md — Phase 24 complete (--output flag help text, CFG-04 closed)
 Resume file: None
-Next action: Phase 23 complete — SNK-02 satisfied; proceed to next phase
+Next action: Phase 24 complete — CFG-04 satisfied; proceed to next phase

@@ -359,5 +359,5 @@ Plans:
 | 21. Kafka Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-05 |
 | 22. Google Pub/Sub Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
 | 23. RabbitMQ Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
-| 24. Sink Config Surface Cleanup [GAP] | v2.1 | 0/2 | ⬜ Pending | — |
+| 24. Sink Config Surface Cleanup [GAP] | 1/2 | In Progress|  | — |
 | 25. PubSub Per-Table Topic Routing [GAP] | v2.1 | 0/2 | ⬜ Pending | — |
