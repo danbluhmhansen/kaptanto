@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 ## Current Position
 
 Phase: 25 — PubSub Per-Table Topic Routing
-Plan: 01 of 02 (complete)
-Status: Plan 25-01 complete — PubSubSinkConsumer publisher pool with resolveTopicID + getOrCreatePublisher, CFG-02 closed
-Last activity: 2026-05-08 — Plan 25-01 complete (PubSub per-table topic routing via lazy publisher pool)
+Plan: 02 of 02 (complete)
+Status: Phase 25 complete — publisher pool (25-01) and tests (25-02) done; CFG-02 closed
+Last activity: 2026-05-08 — Plan 25-02 complete (publisher pool tests: per-table routing, pool reuse, close-drains-all, empty-template guard, regression)
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 1/2 plans complete in Phase 25)
+Progress: [████░░░░░░] 40% (2/5 phases complete, 2/2 plans complete in Phase 25)
 
 ## Accumulated Context
 
@@ -84,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 25-pubsub-per-table-topic-routing]: Publisher pool seeded at construction with default publisher for cfg.TopicID — template-empty path identical to Phase 22, zero regression risk
 - [Phase 25-pubsub-per-table-topic-routing]: getOrCreatePublisher uses double-checked lazy init with RWMutex — avoids lock contention for common case where topic is already in pool
 - [Phase 25-pubsub-per-table-topic-routing]: Close snapshots publisher slice under lock then releases lock before Stop() — prevents deadlock with in-flight Deliver goroutines
+- [Phase 25 Plan 02]: strings.Contains(m.Topic, topicID) used for topic matching — pstest fully-qualifies topics as projects/{id}/topics/{name}; exact equality would fail
+- [Phase 25 Plan 02]: {{if false}}something{{end}} template used for empty-string guard test — Go templates do not error on missing fields; this is the canonical way to produce an empty rendered string
 
 ### Pending Todos
 
@@ -99,6 +101,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-08
-Stopped at: Completed 25-01-PLAN.md — PubSub publisher pool refactor, CFG-02 closed
+Stopped at: Completed 25-02-PLAN.md — PubSub publisher pool tests, Phase 25 complete
 Resume file: None
-Next action: Phase 25 Plan 01 complete — proceed to 25-02 (tests or next plan)
+Next action: Phase 25 complete — proceed to next phase

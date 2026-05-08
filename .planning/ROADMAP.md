@@ -78,7 +78,7 @@ Full archive: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 22: Google Pub/Sub Sink** — PubSubConsumer with ordering key, synchronous result.Get confirmation, ResumePublish on ordering-key errors (completed 2026-05-06)
 - [x] **Phase 23: RabbitMQ Sink** — RabbitMQConsumer with per-partition channel pool, publisher confirms, and explicit reconnect loop (completed 2026-05-06)
 - [x] **Phase 24: Sink Config Surface Cleanup** [GAP-CLOSURE] — Fix stale `--output` flag help text (missing kafka/pubsub/rabbitmq); wire SQSSinkConfig.TLS into AWS SDK custom HTTP transport for CA pinning (completed 2026-05-07)
-- [ ] **Phase 25: PubSub Per-Table Topic Routing** [GAP-CLOSURE] — Implement publisher pool so `TopicTemplate` routes Deliver() to the correct per-topic publisher; Close() drains all pooled publishers
+- [x] **Phase 25: PubSub Per-Table Topic Routing** [GAP-CLOSURE] — Implement publisher pool so `TopicTemplate` routes Deliver() to the correct per-topic publisher; Close() drains all pooled publishers (completed 2026-05-08)
 
 ## Phase Details
 
@@ -360,4 +360,4 @@ Plans:
 | 22. Google Pub/Sub Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
 | 23. RabbitMQ Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
 | 24. Sink Config Surface Cleanup [GAP] | 2/2 | Complete    | 2026-05-07 | — |
-| 25. PubSub Per-Table Topic Routing [GAP] | 1/2 | In Progress|  | — |
+| 25. PubSub Per-Table Topic Routing [GAP] | 2/2 | Complete   | 2026-05-08 | — |
