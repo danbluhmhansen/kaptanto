@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-09T13:55:23.288Z"
+last_updated: "2026-05-09T16:50:04.742Z"
 progress:
   total_phases: 36
   completed_phases: 35
-  total_plans: 84
-  completed_plans: 84
+  total_plans: 86
+  completed_plans: 85
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 
 ## Current Position
 
-Phase: 27 — PubSub Config Tests and NATS Comment Fix
-Plan: 01 of 01 (complete)
-Status: Phase 27 complete — PubSub YAML round-trip tests + NATS DLV-02 comment fix done; TECH-DEBT-27 closed
-Last activity: 2026-05-09 — Plan 27-01 complete (3 PubSub tests, DLV-02 comment corrected to RTR-04)
+Phase: 28 — SQS Per-Table Routing
+Plan: 01 of 02 (complete)
+Status: Plan 28-01 complete — QueueURLTemplate config field + resolveQueueURL/getOrValidateQueue routing pool added to SQSSinkConsumer; CFG-02 structural gap closed
+Last activity: 2026-05-09 — Plan 28-01 complete (QueueURLTemplate field, resolveQueueURL, getOrValidateQueue, updated Deliver, 16 existing tests green)
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 1/1 plans complete in Phase 27)
+Progress: [████░░░░░░] 40% (2/5 phases complete, 1/2 plans complete in Phase 28)
 
 ## Accumulated Context
 
@@ -91,6 +91,9 @@ Recent decisions affecting current work:
 - [Phase 26 Plan 01]: generateTestClientKeypair uses PKCS#1 (RSA PRIVATE KEY) not PKCS#8 — tls.LoadX509KeyPair requires PKCS#1 for RSA keys
 - [Phase 26 Plan 01]: No buildTLSConfig helper extracted — SQS consumer configures TLS once; inline is correct per research anti-patterns
 - [Phase 27-pubsub-config-tests-and-nats-comment-fix]: PubSub YAML key is 'pubsub' (not 'pub-sub') — consistent with existing SinksConfig yaml tag
+- [Phase 28-sqs-per-table-routing]: QueueURLTemplate nil-check in resolveQueueURL ensures zero-regression for existing single-queue deployments
+- [Phase 28-sqs-per-table-routing]: validatedQueues seeded with default queueURL at construction so no-template path never calls GetQueueAttributes at Deliver time
+- [Phase 28-sqs-per-table-routing]: Template parsed before AWS config loading in NewSQSSinkConsumer — fail fast before any AWS I/O
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-09
-Stopped at: Completed 27-01-PLAN.md — PubSub config tests + NATS DLV-02 comment fix, Phase 27 complete
+Stopped at: Completed 28-01-PLAN.md — SQS QueueURLTemplate routing + validated queue pool, Plan 28-01 complete
 Resume file: None
-Next action: Phase 27 complete — proceed to next phase
+Next action: Execute Plan 28-02 (routing tests for resolveQueueURL + getOrValidateQueue)
