@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-08T09:46:45.588Z"
+last_updated: "2026-05-08T09:54:01.587Z"
 progress:
   total_phases: 33
-  completed_phases: 32
+  completed_phases: 33
   total_plans: 82
-  completed_plans: 81
+  completed_plans: 82
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 
 ## Current Position
 
-Phase: 25 — PubSub Per-Table Topic Routing
-Plan: 02 of 02 (complete)
-Status: Phase 25 complete — publisher pool (25-01) and tests (25-02) done; CFG-02 closed
-Last activity: 2026-05-08 — Plan 25-02 complete (publisher pool tests: per-table routing, pool reuse, close-drains-all, empty-template guard, regression)
+Phase: 26 — SQS mTLS Wiring
+Plan: 01 of 01 (complete)
+Status: Phase 26 complete — SQS mTLS wired (26-01) done; CFG-03 SQS mTLS scope closed
+Last activity: 2026-05-09 — Plan 26-01 complete (unified CA+mTLS TLS block, XOR guard, three mTLS tests)
 
 Progress: [████░░░░░░] 40% (2/5 phases complete, 2/2 plans complete in Phase 25)
 
@@ -86,6 +86,10 @@ Recent decisions affecting current work:
 - [Phase 25-pubsub-per-table-topic-routing]: Close snapshots publisher slice under lock then releases lock before Stop() — prevents deadlock with in-flight Deliver goroutines
 - [Phase 25 Plan 02]: strings.Contains(m.Topic, topicID) used for topic matching — pstest fully-qualifies topics as projects/{id}/topics/{name}; exact equality would fail
 - [Phase 25 Plan 02]: {{if false}}something{{end}} template used for empty-string guard test — Go templates do not error on missing fields; this is the canonical way to produce an empty rendered string
+- [Phase 26 Plan 01]: Unified CA+mTLS TLS block with single awsconfig.WithHTTPClient call — AWS SDK v2 last-write-wins on options; two calls would silently discard the CA pool
+- [Phase 26 Plan 01]: XOR guard on cert-file + key-file returns error before AWS config loading — fail-fast at construction, not at first SendMessage
+- [Phase 26 Plan 01]: generateTestClientKeypair uses PKCS#1 (RSA PRIVATE KEY) not PKCS#8 — tls.LoadX509KeyPair requires PKCS#1 for RSA keys
+- [Phase 26 Plan 01]: No buildTLSConfig helper extracted — SQS consumer configures TLS once; inline is correct per research anti-patterns
 
 ### Pending Todos
 
@@ -100,7 +104,7 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-08
-Stopped at: Completed 25-02-PLAN.md — PubSub publisher pool tests, Phase 25 complete
+Last session: 2026-05-09
+Stopped at: Completed 26-01-PLAN.md — SQS mTLS wiring, Phase 26 complete
 Resume file: None
-Next action: Phase 25 complete — proceed to next phase
+Next action: Phase 26 complete — proceed to next phase
