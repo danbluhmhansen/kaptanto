@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-09T13:09:58.977Z"
+last_updated: "2026-05-09T13:53:20.552Z"
 progress:
   total_phases: 36
-  completed_phases: 34
-  total_plans: 83
-  completed_plans: 83
+  completed_phases: 35
+  total_plans: 84
+  completed_plans: 84
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-05-03)
 
 ## Current Position
 
-Phase: 26 — SQS mTLS Wiring
+Phase: 27 — PubSub Config Tests and NATS Comment Fix
 Plan: 01 of 01 (complete)
-Status: Phase 26 complete — SQS mTLS wired (26-01) done; CFG-03 SQS mTLS scope closed
-Last activity: 2026-05-09 — Plan 26-01 complete (unified CA+mTLS TLS block, XOR guard, three mTLS tests)
+Status: Phase 27 complete — PubSub YAML round-trip tests + NATS DLV-02 comment fix done; TECH-DEBT-27 closed
+Last activity: 2026-05-09 — Plan 27-01 complete (3 PubSub tests, DLV-02 comment corrected to RTR-04)
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 2/2 plans complete in Phase 25)
+Progress: [████░░░░░░] 40% (2/5 phases complete, 1/1 plans complete in Phase 27)
 
 ## Accumulated Context
 
@@ -90,6 +90,7 @@ Recent decisions affecting current work:
 - [Phase 26 Plan 01]: XOR guard on cert-file + key-file returns error before AWS config loading — fail-fast at construction, not at first SendMessage
 - [Phase 26 Plan 01]: generateTestClientKeypair uses PKCS#1 (RSA PRIVATE KEY) not PKCS#8 — tls.LoadX509KeyPair requires PKCS#1 for RSA keys
 - [Phase 26 Plan 01]: No buildTLSConfig helper extracted — SQS consumer configures TLS once; inline is correct per research anti-patterns
+- [Phase 27-pubsub-config-tests-and-nats-comment-fix]: PubSub YAML key is 'pubsub' (not 'pub-sub') — consistent with existing SinksConfig yaml tag
 
 ### Pending Todos
 
@@ -105,6 +106,6 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-05-09
-Stopped at: Completed 26-01-PLAN.md — SQS mTLS wiring, Phase 26 complete
+Stopped at: Completed 27-01-PLAN.md — PubSub config tests + NATS DLV-02 comment fix, Phase 27 complete
 Resume file: None
-Next action: Phase 26 complete — proceed to next phase
+Next action: Phase 27 complete — proceed to next phase

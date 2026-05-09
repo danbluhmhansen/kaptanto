@@ -80,7 +80,7 @@ Full archive: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 24: Sink Config Surface Cleanup** [GAP-CLOSURE] — Fix stale `--output` flag help text (missing kafka/pubsub/rabbitmq); wire SQSSinkConfig.TLS into AWS SDK custom HTTP transport for CA pinning (completed 2026-05-07)
 - [x] **Phase 25: PubSub Per-Table Topic Routing** [GAP-CLOSURE] — Implement publisher pool so `TopicTemplate` routes Deliver() to the correct per-topic publisher; Close() drains all pooled publishers (completed 2026-05-08)
 - [x] **Phase 26: SQS mTLS Wiring** [TECH-DEBT] — Wire `SQSSinkConfig.TLS.CertFile`/`KeyFile` into AWS SDK custom HTTP transport for mTLS, or add startup validation error when either field is set without a complete mTLS config (completed 2026-05-09)
-- [ ] **Phase 27: PubSub Config Tests and NATS Comment Fix** [TECH-DEBT] — Add 3 YAML round-trip tests for `PubSubSinkConfig` to `sinks_test.go`; fix misleading DLV-02 comment in NATS consumer to clarify ordering lives in RTR-04
+- [x] **Phase 27: PubSub Config Tests and NATS Comment Fix** [TECH-DEBT] — Add 3 YAML round-trip tests for `PubSubSinkConfig` to `sinks_test.go`; fix misleading DLV-02 comment in NATS consumer to clarify ordering lives in RTR-04 (completed 2026-05-09)
 - [ ] **Phase 28: SQS Per-Table Routing** [TECH-DEBT] — Implement `QueueURLTemplate` + queue URL pool for SQS sink so CDC events from different tables route to different FIFO queues (closes CFG-02 structural gap for SQS)
 
 ## Phase Details
@@ -414,5 +414,5 @@ Plans:
 | 24. Sink Config Surface Cleanup [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-07 |
 | 25. PubSub Per-Table Topic Routing [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-08 |
 | 26. SQS mTLS Wiring [TECH-DEBT] | 1/1 | Complete    | 2026-05-09 | — |
-| 27. PubSub Config Tests + NATS Comment Fix [TECH-DEBT] | v2.1 | 0/1 | Pending | — |
+| 27. PubSub Config Tests + NATS Comment Fix [TECH-DEBT] | 1/1 | Complete   | 2026-05-09 | — |
 | 28. SQS Per-Table Routing [TECH-DEBT] | v2.1 | 0/2 | Pending | — |
