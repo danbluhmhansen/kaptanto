@@ -413,6 +413,6 @@ Plans:
 | 23. RabbitMQ Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
 | 24. Sink Config Surface Cleanup [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-07 |
 | 25. PubSub Per-Table Topic Routing [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-08 |
-| 26. SQS mTLS Wiring [TECH-DEBT] | 1/1 | Complete   | 2026-05-09 | — |
+| 26. SQS mTLS Wiring [TECH-DEBT] | 1/1 | Complete    | 2026-05-09 | — |
 | 27. PubSub Config Tests + NATS Comment Fix [TECH-DEBT] | v2.1 | 0/1 | Pending | — |
 | 28. SQS Per-Table Routing [TECH-DEBT] | v2.1 | 0/2 | Pending | — |

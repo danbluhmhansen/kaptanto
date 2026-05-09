@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Queue Sinks
 status: unknown
-last_updated: "2026-05-08T09:54:01.587Z"
+last_updated: "2026-05-09T13:09:58.977Z"
 progress:
-  total_phases: 33
-  completed_phases: 33
-  total_plans: 82
-  completed_plans: 82
+  total_phases: 36
+  completed_phases: 34
+  total_plans: 83
+  completed_plans: 83
 ---
 
 # Project State
