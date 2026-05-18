@@ -6,7 +6,8 @@
 - ✅ **v1.1 Production Hardening** — Phases 8–10 (shipped 2026-03-20)
 - ✅ **v1.2 Benchmark Suite** — Phases 11–13 (shipped 2026-03-21)
 - ✅ **v2.0 Distributed Architecture** — Phases 14–18 (shipped 2026-05-03)
-- 🚧 **v2.1 Queue Sinks** — Phases 19–28 (in progress)
+- ✅ **v2.1 Queue Sinks** — Phases 19–28 (shipped 2026-05-09)
+- 📋 **v2.2** — Phases 29+ (planned)
 
 ## Phases
 
@@ -68,319 +69,27 @@ Full archive: `.planning/milestones/v2.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v2.1 Queue Sinks (In Progress)
-
-**Milestone Goal:** Enable Kaptanto to publish CDC events directly to the major message queues — SQS, RabbitMQ, Kafka, Google Pub/Sub, and NATS — as output sinks with per-event push delivery, at-least-once guarantees, per-key ordering, and full observability.
+<details>
+<summary>✅ v2.1 Queue Sinks (Phases 19–28) — SHIPPED 2026-05-09</summary>
 
 - [x] **Phase 19: Sink Infrastructure and NATS Sink** — `sinks:` YAML config block, CLI flags, per-sink metrics and /healthz hooks, NATSSinkConsumer with JetStream at-least-once delivery (completed 2026-05-03)
 - [x] **Phase 20: SQS Sink** — SQSConsumer with FIFO queue validation, MessageGroupId from primary key, IdempotencyKey as dedup attribute (completed 2026-05-04)
 - [x] **Phase 21: Kafka Sink** — KafkaConsumer using franz-go (CGO-free mandatory), record key from primary key, SASL/TLS auth (completed 2026-05-05)
 - [x] **Phase 22: Google Pub/Sub Sink** — PubSubConsumer with ordering key, synchronous result.Get confirmation, ResumePublish on ordering-key errors (completed 2026-05-06)
 - [x] **Phase 23: RabbitMQ Sink** — RabbitMQConsumer with per-partition channel pool, publisher confirms, and explicit reconnect loop (completed 2026-05-06)
-- [x] **Phase 24: Sink Config Surface Cleanup** [GAP-CLOSURE] — Fix stale `--output` flag help text (missing kafka/pubsub/rabbitmq); wire SQSSinkConfig.TLS into AWS SDK custom HTTP transport for CA pinning (completed 2026-05-07)
-- [x] **Phase 25: PubSub Per-Table Topic Routing** [GAP-CLOSURE] — Implement publisher pool so `TopicTemplate` routes Deliver() to the correct per-topic publisher; Close() drains all pooled publishers (completed 2026-05-08)
-- [x] **Phase 26: SQS mTLS Wiring** [TECH-DEBT] — Wire `SQSSinkConfig.TLS.CertFile`/`KeyFile` into AWS SDK custom HTTP transport for mTLS, or add startup validation error when either field is set without a complete mTLS config (completed 2026-05-09)
-- [x] **Phase 27: PubSub Config Tests and NATS Comment Fix** [TECH-DEBT] — Add 3 YAML round-trip tests for `PubSubSinkConfig` to `sinks_test.go`; fix misleading DLV-02 comment in NATS consumer to clarify ordering lives in RTR-04 (completed 2026-05-09)
-- [x] **Phase 28: SQS Per-Table Routing** [TECH-DEBT] — Implement `QueueURLTemplate` + queue URL pool for SQS sink so CDC events from different tables route to different FIFO queues (closes CFG-02 structural gap for SQS) (completed 2026-05-09)
+- [x] **Phase 24: Sink Config Surface Cleanup** [GAP-CLOSURE] — Fix stale `--output` flag help text; wire SQSSinkConfig.TLS into AWS SDK custom HTTP transport for CA pinning (completed 2026-05-07)
+- [x] **Phase 25: PubSub Per-Table Topic Routing** [GAP-CLOSURE] — Implement publisher pool so `TopicTemplate` routes Deliver() to the correct per-topic publisher (completed 2026-05-08)
+- [x] **Phase 26: SQS mTLS Wiring** [TECH-DEBT] — Wire CertFile/KeyFile into AWS SDK custom HTTP transport; startup validation for incomplete mTLS config (completed 2026-05-09)
+- [x] **Phase 27: PubSub Config Tests and NATS Comment Fix** [TECH-DEBT] — 3 YAML round-trip tests for PubSubSinkConfig; fix misleading DLV-02 comment in NATS consumer (completed 2026-05-09)
+- [x] **Phase 28: SQS Per-Table Routing** [TECH-DEBT] — QueueURLTemplate + validated queue URL pool for per-table SQS FIFO routing (completed 2026-05-09)
 
-## Phase Details
+Full archive: `.planning/milestones/v2.1-ROADMAP.md`
 
-### Phase 11: Harness and Load Generator
-**Goal**: Anyone can start the full benchmark harness with one command and generate configurable load against it
-**Depends on**: Phase 10 (Kaptanto binary exists and is buildable)
-**Requirements**: HRN-01, HRN-02, HRN-03, HRN-04, LOAD-01, LOAD-02, LOAD-03
-**Success Criteria** (what must be TRUE):
-  1. `docker compose up` in `bench/` starts Kaptanto, Debezium Server, Sequin, PeerDB, and Postgres — all services reach healthy state within 2 minutes
-  2. Kaptanto service is built from source via `Dockerfile.bench` (not a pre-built image); the compose service depends on the build completing
-  3. `bench/cmd/loadgen` inserts rows at configurable rates (default 10k, up to 50k ops/s), with each row containing a `_bench_ts` column from `clock_timestamp()`
-  4. Load generator accepts `--mode steady|burst|large-batch|idle` and executes the correct load shape for each mode
-  5. Tool versions are pinned in `docker-compose.yml`; `bench/README.md` documents Maxwell's Daemon exclusion with the issue reference
-**Plans**: 3 plans
+</details>
 
-Plans:
-- [ ] 11-01: Docker Compose harness — compose file with all services, healthchecks, depends_on ordering, and Dockerfile.bench
-- [x] 11-02: Load generator binary — `bench/cmd/loadgen` with configurable rate, `_bench_ts` column, scenario modes (completed 2026-03-21)
-- [ ] 11-03: Harness integration — verify compose+loadgen end-to-end, pin versions, write bench/README.md
+### 📋 v2.2 (Planned)
 
-### Phase 12: Metrics Collector and Scenarios
-**Goal**: All five benchmark scenarios run to completion and every CDC event from every tool is captured with end-to-end timing data
-**Depends on**: Phase 11
-**Requirements**: MET-01, MET-02, MET-03, MET-04, SCN-01, SCN-02, SCN-03, SCN-04, SCN-05
-**Success Criteria** (what must be TRUE):
-  1. Running the scenario orchestrator executes all 5 scenarios in sequence (steady, burst, large-batch, crash+recovery, idle) and produces `metrics.jsonl`
-  2. Each line in `metrics.jsonl` contains tool name, scenario, receive timestamp, `_bench_ts` from payload, and computed latency in microseconds
-  3. Per-tool adapters receive events correctly: Kaptanto via SSE, Debezium Server via HTTP POST webhook, Sequin via HTTP push, PeerDB via Kafka
-  4. `docker_stats.jsonl` contains per-container CPU% and RSS (read from `/proc/1/status` VmRSS) sampled every 2 seconds throughout all scenarios
-  5. Crash+recovery scenario (SCN-04) SIGKILLs each tool and records seconds until event delivery resumes
-**Plans**: 3 plans
-
-Plans:
-- [ ] 12-01: Metrics collector — `bench/cmd/collector` with per-tool adapters (SSE, webhook, HTTP push, Kafka) writing to `metrics.jsonl`
-- [ ] 12-02: Docker stats poller — `/proc/1/status` VmRSS reader writing to `docker_stats.jsonl` every 2s
-- [ ] 12-03: Scenario orchestrator — steady, burst, large-batch, crash+recovery, idle scenarios with collector integration
-
-### Phase 13: Report Generator
-**Goal**: A single command turns raw JSONL data into a self-contained, shareable benchmark report with charts
-**Depends on**: Phase 12
-**Requirements**: RPT-01, RPT-02, RPT-03, RPT-04
-**Success Criteria** (what must be TRUE):
-  1. `bench/cmd/reporter` reads `metrics.jsonl` and `docker_stats.jsonl` and writes a single HTML file with all JS and CSS inlined (no CDN requests, works offline)
-  2. HTML report contains charts for throughput, latency (p50/p95/p99), CPU%, RSS, and recovery time — one chart per scenario per metric
-  3. HTML includes a methodology section covering tool versions, hardware specs, scenario definitions, measurement approach, and Maxwell's Daemon exclusion rationale
-  4. `bench/results/REPORT.md` is generated alongside the HTML file, containing Markdown tables of results and a link to the HTML report
-**Plans**: 2 plans
-
-Plans:
-- [ ] 13-01: Reporter binary — `bench/cmd/reporter` reads JSONL, computes percentiles, generates data structures for charts
-- [ ] 13-02: HTML + Markdown output — self-contained HTML with inlined chart library, methodology section, and REPORT.md generation
-
-### Phase 14: Shared State Foundation
-**Goal**: Consumer delivery positions, backfill progress, and cluster membership are persisted in shared Postgres so any surviving node can resume any other node's work without gaps
-**Depends on**: Phase 13
-**Requirements**: STATE-01, STATE-02, STATE-03
-**Success Criteria** (what must be TRUE):
-  1. When a node crashes mid-delivery, a surviving node resumes SSE and gRPC delivery from the exact last acknowledged cursor position — no events are skipped and no already-delivered events are re-sent
-  2. The `kaptanto_nodes` table shows all active nodes with their last heartbeat; a node that stops heartbeating is marked stale within one heartbeat interval and its partition assignments are released
-  3. A backfill running on one node can be interrupted by killing that node; a different node starts `kaptanto` and the snapshot resumes from the last committed keyset cursor without restarting from scratch
-  4. `make test` passes with CGO_ENABLED=0 — no new CGO dependencies introduced in this phase
-**Plans**: 3 plans
-
-Plans:
-- [ ] 14-01-PLAN.md — PostgresCursorStore and --cluster config fields (STATE-01)
-- [ ] 14-02-PLAN.md — PostgresBackfillStore and NodeHeartbeater (STATE-02, STATE-03)
-- [ ] 14-03-PLAN.md — Wire Postgres stores into root.go behind --cluster flag (STATE-01, STATE-02, STATE-03)
-
-### Phase 15: Distributed Event Log
-**Goal**: The event log is Raft-replicated across all cluster nodes so any single node failure does not lose events, and CHK-01 holds cluster-wide
-**Depends on**: Phase 14
-**Requirements**: EVLOG-01, EVLOG-02, EVLOG-03
-**Success Criteria** (what must be TRUE):
-  1. Killing one node in a running 3-node cluster does not lose any events that were already appended — the cluster continues serving events from the replicated log
-  2. The source LSN does not advance (confirmed_flush_lsn is not updated) until a quorum of NATS JetStream nodes confirms the append is durable — CHK-01 holds cluster-wide
-  3. `make build` and `make test` succeed with CGO_ENABLED=0 — the Kaptanto binary remains pure Go; NATS runs as a co-located sidecar process started by `kaptanto start --cluster`
-  4. A 3-node cluster can be started with a single `kaptanto start --cluster` invocation on each node — no separate NATS configuration steps required
-**Plans**: 2 plans
-
-Plans:
-- [ ] 15-01-PLAN.md — NatsEventLog implementation, embedded server helper, unit tests (EVLOG-01, EVLOG-02)
-- [ ] 15-02-PLAN.md — Config fields (ClusterPeers, NatsClusterPort), CLI flags, root.go wiring (EVLOG-03)
-
-### Phase 16: Partition Ownership and Active/Active Delivery
-**Goal**: Multiple active Kaptanto nodes each own a non-overlapping set of partitions and serve consumers concurrently, with per-key ordering preserved across all node join and leave events
-**Depends on**: Phase 15
-**Requirements**: DLVR-01, DLVR-02, DLVR-03, DLVR-04
-**Success Criteria** (what must be TRUE):
-  1. A new node joining a running cluster automatically claims unclaimed partitions and begins serving SSE and gRPC consumers for those partitions — no operator intervention required
-  2. When a node leaves gracefully or is killed, its partitions are reassigned to surviving nodes; the old node drains all in-flight events before the new node begins consuming, and a zombie node that reconnects after being replaced cannot write events or advance cursors
-  3. N Kaptanto nodes simultaneously serve SSE and gRPC consumers, each node serving only its owned partitions — consumers connected to any node receive events without gaps or duplicates
-  4. Events for any given primary key arrive at downstream consumers in LSN order across node join, graceful leave, and crash-leave events — RTR-04 is not violated during partition reassignment
-**Plans**: 3 plans
-
-Plans:
-- [ ] 16-01-PLAN.md — PartitionStore: kaptanto_partitions schema, atomic claim/steal/release operations (DLVR-01, DLVR-02)
-- [ ] 16-02-PLAN.md — PartitionManager loop, epochCursorStore adapter, Router.SetOwnedPartitions patch (DLVR-01, DLVR-02, DLVR-03, DLVR-04)
-- [ ] 16-03-PLAN.md — root.go wiring: PartitionManager + epochCursorStore behind --cluster, correct shutdown ordering (DLVR-01, DLVR-02, DLVR-03, DLVR-04)
-
-### Phase 17: Distributed Source Coordination
-**Goal**: The WAL leader is protected by NATS JetStream KV-backed election with epoch fencing so no zombie node can corrupt the replication slot, and MongoDB resume token progress survives node loss
-**Depends on**: Phase 16
-**Requirements**: SRCC-01, SRCC-02, SRCC-03
-**Success Criteria** (what must be TRUE):
-  1. A node that was network-partitioned and then reconnects after a new WAL leader was elected cannot advance the Postgres replication slot LSN or write events — epoch fencing tokens reject its operations
-  2. Leader election does not require a separate coordination service — NATS JetStream KV (already embedded from Phase 15) provides atomic kv.Create consensus; any single node failure does not prevent a new leader from being elected
-  3. When a MongoDB-sourced node crashes, the replacement node resumes the Change Stream from the correct position recorded in the shared store — no events already logged are re-processed, and no events between the last token and the crash are lost
-**Plans**: 3 plans
-
-Plans:
-- [ ] 17-01-PLAN.md — NatsEventLog.Conn() accessor + WalLeaderElector (NATS KV TTL lease) with tests (SRCC-02)
-- [ ] 17-02-PLAN.md — PostgresConnector epoch fencing: epochGetter field + SetEpochGetter + fenced sendStandbyStatus (SRCC-01)
-- [ ] 17-03-PLAN.md — root.go wiring: WalLeaderElector into Postgres pipeline + PostgresStore ckStore for MongoDB cluster mode (SRCC-01, SRCC-02, SRCC-03)
-
-### Phase 18: MongoDB Cluster Infrastructure Wiring [GAP-CLOSURE]
-**Goal**: MongoDB+cluster deployments start the same cluster infrastructure goroutines (heartbeater, pm) as Postgres+cluster, fully closing STATE-02 and DLVR-03
-**Depends on**: Phase 17
-**Requirements**: STATE-02, DLVR-01, DLVR-02, DLVR-03
-**Root cause:** `runMongoPipeline` is dispatched at root.go:566 before the errgroup block at 641–651, so `heartbeater.Run` and `pm.Run` are never started for MongoDB+cluster.
-**Success Criteria** (what must be TRUE):
-  1. In MongoDB+cluster mode, `heartbeater.Run` and `pm.Run` are started — `kaptanto_nodes` row is inserted and stale node detection fires
-  2. `epochCursorStore.SaveCursor` correctly persists cursor positions for MongoDB+cluster consumers — partition ownership is respected, no silent drops
-  3. `pm.ReleaseAll` is called on clean shutdown for MongoDB+cluster — partition rows are released and not left claimed
-  4. `walElector` is nil for MongoDB+cluster (no WAL leader needed); inaccurate root.go comment is corrected
-  5. Dead `NodeHeartbeater.staleThreshold` field and dead `kaptanto_nodes.partition_assignments` JSONB column are removed
-  6. All tests pass; `make verify-no-cgo` green
-**Plans**: 2 plans
-
-Plans:
-- [ ] 18-01-PLAN.md — Pass heartbeater and pm into runMongoPipeline; start cluster goroutines; call pm.ReleaseAll on shutdown (STATE-02, DLVR-01, DLVR-02, DLVR-03)
-- [ ] 18-02-PLAN.md — Fix walElector nil guard for MongoDB+cluster; fix inaccurate root.go comment; remove dead staleThreshold field and partition_assignments column
-
-### Phase 19: Sink Infrastructure and NATS Sink
-**Goal**: Users can configure and run a queue sink output, with the full config/CLI/metrics/healthz framework in place and NATS JetStream validated as the first working sink
-**Depends on**: Phase 18
-**Requirements**: CFG-01, CFG-02, CFG-03, CFG-04, DLV-01, DLV-02, DLV-03, DLV-04, OBS-01, OBS-02, SNK-05
-**Success Criteria** (what must be TRUE):
-  1. User can add a `sinks:` block to `kaptanto.yaml` with NATS connection params, TLS settings, and a Go template for subject routing (e.g., `cdc.{{.Schema}}.{{.Table}}`), and start Kaptanto with `--output nats` — events are published to the configured NATS JetStream subject
-  2. Every published event's `IdempotencyKey` is included as a NATS message header, and `Deliver` blocks until the JetStream server returns an `PubAck` — cursor does not advance before the broker confirms receipt (CHK-01 preserved)
-  3. Transient NATS broker errors (connection drops, timeout) trigger automatic retry via `RetryScheduler` without crashing the pipeline — the sink recovers and resumes delivery
-  4. Prometheus metrics `queue_publish_total`, `queue_publish_errors_total`, and `queue_publish_latency_seconds` are populated for the active NATS sink and visible at `/metrics`
-  5. `/healthz` includes a `nats` probe that reports unhealthy when the NATS connection is down
-**Plans**: 3 plans
-
-Plans:
-- [ ] 19-01-PLAN.md — Config types (SinksConfig, NATSSinkConfig, TLSConfig) + queue publish metrics
-- [ ] 19-02-PLAN.md — NATSSinkConsumer implementation (Deliver, Ping, TLS, stream validation)
-- [ ] 19-03-PLAN.md — root.go wiring: case "nats":, health probe, obs HTTP server
-
-### Phase 20: SQS Sink
-**Goal**: Users can publish CDC events to an AWS SQS FIFO queue with per-key ordering preserved end-to-end via MessageGroupId
-**Depends on**: Phase 19
-**Requirements**: SNK-01
-**Success Criteria** (what must be TRUE):
-  1. User can configure `--output sqs` with an SQS FIFO queue URL, region, and AWS credentials (IAM role, environment variables, or static keys) — Kaptanto starts and publishes events to the queue
-  2. Kaptanto detects at startup if the configured queue is a Standard (non-FIFO) queue and exits with a clear error message — Standard queues are rejected because they cannot preserve per-key ordering
-  3. Each published message has `MessageGroupId` set to the event's primary key hash, `MessageDeduplicationId` set to the `IdempotencyKey`, and the raw `IdempotencyKey` value in a message attribute — downstream consumers can deduplicate without parsing the body
-  4. `make build CGO_ENABLED=0` succeeds with the SQS sink included — no CGO introduced
-**Plans**: 3 plans
-
-Plans:
-- [ ] 20-01-PLAN.md — SQSSinkConfig type + aws-sdk-go-v2 module installation
-- [ ] 20-02-PLAN.md — SQSSinkConsumer implementation (Deliver, Ping, FIFO validation, interface injection for tests)
-- [ ] 20-03-PLAN.md — root.go wiring: case "sqs":, health probe, obs HTTP server, cmd tests
-
-### Phase 21: Kafka Sink
-**Goal**: Users can publish CDC events to a Kafka topic with per-key ordering preserved via record key, using a pure-Go client that satisfies the CGO_ENABLED=0 build constraint
-**Depends on**: Phase 20
-**Requirements**: SNK-03
-**Success Criteria** (what must be TRUE):
-  1. User can configure `--output kafka` with bootstrap brokers, topic template, and optional SASL (PLAIN/SCRAM-SHA-256/SCRAM-SHA-512) and TLS settings — Kaptanto starts and produces events to the configured Kafka topic
-  2. Each Kafka record's key is set to the CDC event's primary key value — consumers relying on Kafka's partition-by-key guarantee receive events for the same database row on the same partition in order
-  3. `make build CGO_ENABLED=0` and `make verify-no-cgo` succeed — franz-go is used exclusively; confluent-kafka-go is not present in go.mod
-  4. `make test CGO_ENABLED=0` passes for the Kafka sink unit tests
-**Plans**: 3 plans
-
-Plans:
-- [x] 21-01-PLAN.md — KafkaSinkConfig in config.go + franz-go v1.21.1 in go.mod
-- [x] 21-02-PLAN.md — KafkaSinkConsumer implementation with kfake unit tests
-- [x] 21-03-PLAN.md — root.go case "kafka": wiring + cmd tests
-
-### Phase 22: Google Pub/Sub Sink
-**Goal**: Users can publish CDC events to a Google Pub/Sub topic with per-key ordering preserved and correct ResumePublish recovery after ordering-key errors
-**Depends on**: Phase 21
-**Requirements**: SNK-04
-**Success Criteria** (what must be TRUE):
-  1. User can configure `--output pubsub` with a GCP project ID, topic ID, and credentials (Application Default Credentials or explicit service account key path) — Kaptanto starts and publishes events to the Pub/Sub topic
-  2. Each published message has its ordering key set to the CDC event's primary key, and `Publish().Get(ctx)` is called before `Deliver` returns nil — cursor does not advance until the Pub/Sub server confirms the message is durably accepted
-  3. When a Pub/Sub publish fails for an ordering key, `publisher.ResumePublish(orderingKey)` is called before retrying — delivery for all primary keys resumes without operator intervention after a transient broker error
-  4. `make build CGO_ENABLED=0` succeeds with the Pub/Sub sink included — no CGO introduced
-**Plans**: 3 plans
-
-Plans:
-- [ ] 22-01-PLAN.md — PubSubSinkConfig in config.go + cloud.google.com/go/pubsub/v2 v2.6.0 in go.mod
-- [ ] 22-02-PLAN.md — PubSubSinkConsumer implementation with pstest unit tests (TDD)
-- [ ] 22-03-PLAN.md — root.go case "pubsub": wiring + cmd tests
-
-### Phase 23: RabbitMQ Sink
-**Goal**: Users can publish CDC events to a RabbitMQ exchange via AMQP with publisher confirms, concurrent-safe per-partition channel pool, and automatic reconnect on connection loss
-**Depends on**: Phase 22
-**Requirements**: SNK-02
-**Success Criteria** (what must be TRUE):
-  1. User can configure `--output rabbitmq` with an AMQP URL (including optional TLS), exchange name, and routing key template — Kaptanto starts and publishes events to the configured RabbitMQ exchange
-  2. `Deliver` blocks until the broker sends a publisher confirm (`ack`) for the published message — cursor does not advance before the broker confirms receipt; `nack` triggers retry via `RetryScheduler`
-  3. When the AMQP connection is lost (broker restart, network interruption), the sink automatically re-dials with exponential backoff and resumes publishing without crashing the pipeline — events during reconnect are retried, not dropped
-  4. Concurrent `Deliver` calls from the router's 64 partition goroutines do not corrupt channel state — each partition uses a dedicated AMQP channel (per-partition channel pool)
-  5. `make build CGO_ENABLED=0` succeeds with the RabbitMQ sink included — no CGO introduced
-**Plans**: 3 plans
-
-Plans:
-- [ ] 23-01-PLAN.md — RabbitMQSinkConfig in config.go + amqp091-go v1.11.0 in go.mod + config tests
-- [ ] 23-02-PLAN.md — RabbitMQSinkConsumer implementation with interface-injection unit tests (TDD)
-- [ ] 23-03-PLAN.md — root.go case "rabbitmq": wiring + cmd tests
-
-### Phase 24: Sink Config Surface Cleanup [GAP-CLOSURE]
-**Goal**: Close 2 tech debt items from the v2.1 milestone audit: (1) stale `--output` flag help text that omits `kafka`, `pubsub`, and `rabbitmq`; (2) `SQSSinkConfig.TLS` field that is parsed from YAML but silently ignored by `NewSQSSinkConsumer`
-**Depends on**: Phase 23
-**Requirements**: CFG-03 (partial gap — SQS TLS wiring), CFG-04 (partial gap — flag help text completeness)
-**Gap Closure**: Closes tech debt identified in v2.1 audit
-**Success Criteria** (what must be TRUE):
-  1. `kaptanto --help` shows all 8 valid output modes: `stdout | sse | grpc | nats | sqs | kafka | pubsub | rabbitmq`
-  2. When `sinks.sqs.tls.ca-file` is set, `NewSQSSinkConsumer` wires a custom `*http.Client` (with the CA pool loaded from the file) into the AWS config so the SDK uses it for HTTPS connections
-  3. A unit test exercises the CA-file path via interface injection or test helper (no live AWS)
-  4. A cmd test asserts the `--output` flag description string contains all 8 modes
-  5. `CGO_ENABLED=0 go build ./...` and full test suite pass
-**Plans**: 2 plans
-
-Plans:
-- [ ] 24-01-PLAN.md — Fix --output flag help text in root.go + cmd test asserting description completeness
-- [ ] 24-02-PLAN.md — Wire SQSSinkConfig.TLS into AWS http.Transport via custom *http.Client + unit test
-
-### Phase 25: PubSub Per-Table Topic Routing [GAP-CLOSURE]
-**Goal**: Implement `PubSubSinkConfig.TopicTemplate` so `Deliver()` resolves the target topic via the Go template per-message and publishes to the correct publisher — enabling Kaptanto users to route CDC events from different tables to different Pub/Sub topics
-**Depends on**: Phase 24
-**Requirements**: CFG-02 (partial gap — PubSub per-table routing via template)
-**Gap Closure**: Closes CFG-02 partial for PubSub from v2.1 audit
-**Success Criteria** (what must be TRUE):
-  1. When `topic-template` is set (e.g., `cdc.{{.Schema}}.{{.Table}}`), `Deliver()` evaluates the template per-message and publishes to the resolved topic ID
-  2. A per-topic publisher pool (`map[string]*pubsubPublisher`) is maintained; each publisher has `EnableMessageOrdering = true` set before first use
-  3. Publishers are created lazily on first Deliver to that topic; no publishers are pre-created at startup beyond the default `topic-id`
-  4. `Close()` calls `Stop()` on all pooled publishers (including the default one) before calling `client.Close()`
-  5. When a publisher enters `ErrPublishingPaused`, `ResumePublish` is called on the correct per-pool publisher before returning error
-  6. When `topic-template` is empty/absent, behavior is identical to the current fixed `topic-id` path (no regression)
-  7. Tests cover: per-table routing (2 topics), publisher pool lazy creation, Close drains all publishers, template error at deliver time, pstest-compatible
-  8. `CGO_ENABLED=0 go test ./internal/output/pubsub/...` passes
-**Plans**: 2 plans
-
-Plans:
-- [ ] 25-01-PLAN.md — Publisher pool (lazy init, map[string]*pubsubPublisher) + Deliver() topic resolution + Close() drains all
-- [ ] 25-02-PLAN.md — Tests (per-table routing, pool creation, Close drain, template error, ErrPublishingPaused per-publisher) + regression check for fixed topic-id path
-
-### Phase 26: SQS mTLS Wiring [TECH-DEBT]
-**Goal**: Wire `SQSSinkConfig.TLS.CertFile` and `TLS.KeyFile` into the AWS SDK HTTP transport so mTLS connections use the configured client certificate, eliminating the silent misconfiguration where users who set these fields get neither an error nor an mTLS connection
-**Depends on**: Phase 25
-**Requirements**: CFG-03 (SQS mTLS scope gap)
-**Tech Debt Closure**: Closes Phase 20 tech debt item 2 from v2.1 audit
-**Success Criteria** (what must be TRUE):
-  1. When both `cert-file` and `key-file` are set under `sinks.sqs.tls`, `NewSQSSinkConsumer` loads the keypair via `tls.LoadX509KeyPair` and injects it into the AWS SDK HTTP client via `awsconfig.WithHTTPClient`
-  2. When only one of `cert-file` or `key-file` is set (incomplete mTLS config), `NewSQSSinkConsumer` returns an error at startup before any connection is attempted
-  3. When neither field is set, behavior is identical to current (CA-only or no-TLS path — no regression)
-  4. Three unit tests cover: mTLS wired when both fields set, error on partial config, no regression when neither field set
-  5. `CGO_ENABLED=0 go test ./internal/output/sqs/...` passes
-**Plans**: 1 plan
-
-Plans:
-- [ ] 26-01-PLAN.md — Wire mTLS keypair into AWS SDK HTTP transport + startup validation + tests
-
-### Phase 27: PubSub Config Tests and NATS Comment Fix [TECH-DEBT]
-**Goal**: Add the missing `PubSubSinkConfig` YAML round-trip tests to close the config-layer test gap, and correct the misleading DLV-02 comment in the NATS consumer that implies NATS JetStream provides per-key ordering (it does not — ordering is RTR-04's guarantee)
-**Depends on**: Phase 25
-**Requirements**: — (test coverage + comment correctness)
-**Tech Debt Closure**: Closes Phase 22 test gap + Phase 19 comment imprecision from v2.1 audit
-**Success Criteria** (what must be TRUE):
-  1. `sinks_test.go` has at least 3 new YAML round-trip tests for `PubSubSinkConfig`: full block (TopicTemplate + CredentialsFile), no-credentials-file, and absent-block
-  2. `internal/output/nats/consumer.go` doc comment no longer attributes per-key ordering to NATS JetStream; comment accurately states ordering is an RTR-04 router guarantee
-  3. `CGO_ENABLED=0 go test ./internal/config/...` passes (covering new sinks_test.go tests)
-**Plans**: 1 plan
-
-Plans:
-- [ ] 27-01-PLAN.md — Add PubSubSinkConfig YAML tests to sinks_test.go + fix NATS DLV-02 comment
-
-### Phase 28: SQS Per-Table Routing [TECH-DEBT]
-**Goal**: Implement `QueueURLTemplate` support for the SQS sink so CDC events from different tables route to different SQS FIFO queues — closing the CFG-02 structural gap for SQS (analogous to the Phase 25 PubSub publisher pool)
-**Depends on**: Phase 26
-**Requirements**: CFG-02 (SQS per-table routing structural gap)
-**Tech Debt Closure**: Closes Phase 20 tech debt item 1 (CFG-02 structural limitation) from v2.1 audit
-**Success Criteria** (what must be TRUE):
-  1. `SQSSinkConfig` has a `QueueURLTemplate` string field (yaml: `queue-url-template`); when set, it overrides `QueueURL` for per-message routing
-  2. `Deliver()` evaluates the Go template per-message with `.Schema`, `.Table`, `.Operation` fields and resolves the target queue URL
-  3. A queue URL pool (`map[string]string` or per-URL SQS client wrapper) caches resolved URLs to avoid re-evaluating the template on every message
-  4. When `queue-url-template` is empty/absent, behavior is identical to current single-queue path (no regression)
-  5. `Close()` cleans up any pooled per-queue state
-  6. Tests cover: per-table routing (2 queues), pool caching, template error at deliver time, fallback to single queue URL when template absent
-  7. `CGO_ENABLED=0 go test ./internal/output/sqs/...` passes
-**Plans**: 2 plans
-
-Plans:
-- [ ] 28-01-PLAN.md — QueueURLTemplate field + queue URL pool + Deliver() template resolution
-- [ ] 28-02-PLAN.md — Tests (per-table routing, pool caching, template errors, regression check)
+*Requirements to be defined — run `/gsd:new-milestone` to start.*
 
 ## Progress
 
@@ -413,6 +122,6 @@ Plans:
 | 23. RabbitMQ Sink | v2.1 | 3/3 | ✓ Complete | 2026-05-06 |
 | 24. Sink Config Surface Cleanup [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-07 |
 | 25. PubSub Per-Table Topic Routing [GAP] | v2.1 | 2/2 | ✓ Complete | 2026-05-08 |
-| 26. SQS mTLS Wiring [TECH-DEBT] | 1/1 | Complete    | 2026-05-09 | — |
-| 27. PubSub Config Tests + NATS Comment Fix [TECH-DEBT] | 1/1 | Complete    | 2026-05-09 | — |
-| 28. SQS Per-Table Routing [TECH-DEBT] | 2/2 | Complete    | 2026-05-09 | — |
+| 26. SQS mTLS Wiring [TECH-DEBT] | v2.1 | 1/1 | ✓ Complete | 2026-05-09 |
+| 27. PubSub Config Tests + NATS Comment Fix [TECH-DEBT] | v2.1 | 1/1 | ✓ Complete | 2026-05-09 |
+| 28. SQS Per-Table Routing [TECH-DEBT] | v2.1 | 2/2 | ✓ Complete | 2026-05-09 |

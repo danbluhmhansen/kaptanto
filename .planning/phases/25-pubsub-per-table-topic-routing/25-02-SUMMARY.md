@@ -99,3 +99,10 @@ None - no external service configuration required.
 ---
 *Phase: 25-pubsub-per-table-topic-routing*
 *Completed: 2026-05-08*
+
+## Self-Check: PASSED
+
+- FOUND: internal/output/pubsub/consumer_test.go
+- FOUND: .planning/phases/25-pubsub-per-table-topic-routing/25-02-SUMMARY.md
+- FOUND: ca92809 (task 1 commit)
+- FOUND: daf8ca9 (metadata commit)

@@ -1,33 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.1
-milestone_name: Queue Sinks
-status: unknown
-last_updated: "2026-05-09T16:57:21.911Z"
+milestone: v2.2
+milestone_name: TBD
+status: planning
+last_updated: "2026-05-09T00:00:00Z"
 progress:
-  total_phases: 36
-  completed_phases: 36
-  total_plans: 86
-  completed_plans: 86
+  total_phases: 28
+  completed_phases: 28
+  total_plans: 65
+  completed_plans: 65
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-03)
+See: .planning/PROJECT.md (updated 2026-05-09)
 
 **Core value:** Every database change is captured and delivered reliably, in order, with zero infrastructure dependencies beyond the database itself.
-**Current focus:** v2.1 — Queue Sinks (roadmap created, ready to plan Phase 19)
+**Current focus:** v2.1 shipped — planning v2.2 next
 
 ## Current Position
 
-Phase: 28 — SQS Per-Table Routing
-Plan: 02 of 02 (complete)
-Status: Plan 28-02 complete — 3 YAML config round-trip tests + 5 routing/pool/error/regression consumer tests; Phase 28 fully done, CFG-02 closed
-Last activity: 2026-05-09 — Plan 28-02 complete (3 config tests, 5 consumer routing tests, 21 total SQS tests green)
+Milestone v2.1 Queue Sinks — SHIPPED 2026-05-09
+All 28 phases complete, all 15 v2.1 requirements satisfied, all 7 tech debt items closed.
 
-Progress: [████░░░░░░] 40% (2/5 phases complete, 2/2 plans complete in Phase 28)
+Progress: [██████████] 100% (28/28 phases complete)
 
 ## Accumulated Context
 
