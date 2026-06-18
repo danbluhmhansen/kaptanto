@@ -64,3 +64,6 @@ vendor/
 # Local data directory (kaptanto runtime state)
 data/
 !landing/src/data/
+
+# direnv
+.direnv
